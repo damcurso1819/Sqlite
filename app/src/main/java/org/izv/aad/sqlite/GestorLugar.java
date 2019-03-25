@@ -36,7 +36,7 @@ public class GestorLugar {
 
     //crud
 
-    //create -> add - insert - persist
+    //Create -> add - insert - persist
     public long add(Lugar lugar) {
         //... objeto -> contentvalues
         return 0;
@@ -52,7 +52,7 @@ public class GestorLugar {
         return add(lugar);
     }
 
-    //read -> uno, todos, condición + lista, cursor
+    //Read -> uno, todos, condición + lista, cursor
     public List<Lugar> get() {
         return get(null, null);
     }
@@ -79,14 +79,14 @@ public class GestorLugar {
         return getCursor(Contrato.TableLugar._ID + " = ?", new String[]{id + ""});
     }
 
-    //update -> edit - update - save
+    //Update -> edit - save - update
     public int edit(Lugar lugar) {
         // objeto -> contentvalues
         //...
         return 0;
     }
 
-    //delete -> delete, erase, remove
+    //Delete -> delete - erase - remove
     public int remove(Lugar lugar) {
         return remove(lugar.getId());
     }
@@ -96,14 +96,25 @@ public class GestorLugar {
         return 0;
     }
 
+    //others
+
     public static Lugar get(Cursor c) {
         //...
         return null;
     }
 
     private static ContentValues get(Lugar lugar) {
-        //...
-        return null;
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(Contrato.TableLugar._ID, lugar.getId());
+        contentValues.put(Contrato.TableLugar.NOMBRE, lugar.getNombre());
+        contentValues.put(Contrato.TableLugar.LATITUD, lugar.getLatitud());
+        contentValues.put(Contrato.TableLugar.LONGITUD, lugar.getLongitud());
+        contentValues.put(Contrato.TableLugar.LOCALIDAD, lugar.getLocalidad());
+        contentValues.put(Contrato.TableLugar.PAIS, lugar.getPais());
+        contentValues.put(Contrato.TableLugar.COMENTARIO, lugar.getComentario());
+        contentValues.put(Contrato.TableLugar.PUNTOS, lugar.getPuntos());
+        contentValues.put(Contrato.TableLugar.FECHA, lugar.getFecha());
+        return contentValues;
     }
 
     private static ContentValues getContentValues(Lugar lugar) {

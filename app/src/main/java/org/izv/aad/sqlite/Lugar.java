@@ -6,6 +6,7 @@ import android.os.Parcelable;
 public class Lugar implements Parcelable {
 
     private long id;
+    private String nombre;
     private double latitud, longitud;
     private String localidad, pais;
     private String comentario;
@@ -13,11 +14,12 @@ public class Lugar implements Parcelable {
     private String fecha;
 
     public Lugar() {
-        this(0, 0, 0, "", "", "", 0, "");
+        this(0, "", 0, 0, "", "", "", 0, "");
     }
 
-    public Lugar(long id, double latitud, double longitud, String localidad, String pais, String comentario, int puntos, String fecha) {
+    public Lugar(long id, String nombre, double latitud, double longitud, String localidad, String pais, String comentario, int puntos, String fecha) {
         this.id = id;
+        this.nombre = nombre;
         this.latitud = latitud;
         this.longitud = longitud;
         this.localidad = localidad;
@@ -29,6 +31,7 @@ public class Lugar implements Parcelable {
 
     protected Lugar(Parcel in) {
         id = in.readLong();
+        nombre = in.readString();
         latitud = in.readDouble();
         longitud = in.readDouble();
         localidad = in.readString();
@@ -52,6 +55,10 @@ public class Lugar implements Parcelable {
 
     public long getId() {
         return id;
+    }
+
+    public String getNombre() {
+        return nombre;
     }
 
     public double getLatitud() {
@@ -86,6 +93,10 @@ public class Lugar implements Parcelable {
         this.id = id;
     }
 
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
     public void setLatitud(double latitud) {
         this.latitud = latitud;
     }
@@ -115,6 +126,11 @@ public class Lugar implements Parcelable {
     }
 
     @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -125,12 +141,12 @@ public class Lugar implements Parcelable {
         if (Double.compare(lugar.latitud, latitud) != 0) return false;
         if (Double.compare(lugar.longitud, longitud) != 0) return false;
         if (puntos != lugar.puntos) return false;
-        if (localidad != null ? !localidad.equals(lugar.localidad) : lugar.localidad != null)
-            return false;
-        if (pais != null ? !pais.equals(lugar.pais) : lugar.pais != null) return false;
+        if (!nombre.equals(lugar.nombre)) return false;
+        if (!localidad.equals(lugar.localidad)) return false;
+        if (!pais.equals(lugar.pais)) return false;
         if (comentario != null ? !comentario.equals(lugar.comentario) : lugar.comentario != null)
             return false;
-        return fecha != null ? fecha.equals(lugar.fecha) : lugar.fecha == null;
+        return fecha.equals(lugar.fecha);
     }
 
     @Override
@@ -138,40 +154,23 @@ public class Lugar implements Parcelable {
         int result;
         long temp;
         result = (int) (id ^ (id >>> 32));
+        result = 31 * result + nombre.hashCode();
         temp = Double.doubleToLongBits(latitud);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         temp = Double.doubleToLongBits(longitud);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (localidad != null ? localidad.hashCode() : 0);
-        result = 31 * result + (pais != null ? pais.hashCode() : 0);
+        result = 31 * result + localidad.hashCode();
+        result = 31 * result + pais.hashCode();
         result = 31 * result + (comentario != null ? comentario.hashCode() : 0);
         result = 31 * result + puntos;
-        result = 31 * result + (fecha != null ? fecha.hashCode() : 0);
+        result = 31 * result + fecha.hashCode();
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Lugar{" +
-                "id=" + id +
-                ", latitud=" + latitud +
-                ", longitud=" + longitud +
-                ", localidad='" + localidad + '\'' +
-                ", pais='" + pais + '\'' +
-                ", comentario='" + comentario + '\'' +
-                ", puntos=" + puntos +
-                ", fecha='" + fecha + '\'' +
-                '}';
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(id);
+        dest.writeString(nombre);
         dest.writeDouble(latitud);
         dest.writeDouble(longitud);
         dest.writeString(localidad);
