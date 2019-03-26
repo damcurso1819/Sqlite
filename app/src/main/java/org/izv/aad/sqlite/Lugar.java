@@ -179,4 +179,19 @@ public class Lugar implements Parcelable {
         dest.writeInt(puntos);
         dest.writeString(fecha);
     }
+
+    @Override
+    public String toString() {
+        return "Lugar{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", latitud=" + latitud +
+                ", longitud=" + longitud +
+                ", localidad='" + localidad + '\'' +
+                ", pais='" + pais + '\'' +
+                ", comentario='" + comentario + '\'' +
+                ", puntos=" + puntos +
+                ", fecha='" + fecha + '\'' +
+                '}';
+    }
 }

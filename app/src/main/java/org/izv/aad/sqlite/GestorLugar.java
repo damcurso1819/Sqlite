@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.izv.aad.sqlite.MainActivity.LOG;
@@ -38,8 +39,7 @@ public class GestorLugar {
 
     //Create -> add - insert - persist
     public long add(Lugar lugar) {
-        //... objeto -> contentvalues
-        return 0;
+        return bd.insert(Contrato.TableLugar.TABLE, null, GestorLugar.get(lugar));
     }
 
     //alias
@@ -52,19 +52,43 @@ public class GestorLugar {
         return add(lugar);
     }
 
-    //Read -> uno, todos, condición + lista, cursor
+    //Read -> one, all, condition + list, cursor
     public List<Lugar> get() {
         return get(null, null);
     }
 
+    //alias
+    public List<Lugar> getLugar() {
+        return get();
+    }
+
     public List<Lugar> get(String condicion, String[] parametros) {
-        //...
-        return null;
+        List<Lugar> todos = new ArrayList<>();
+        Cursor cursor = getCursor(condicion, parametros);
+        while (cursor.moveToNext ()) {
+            todos.add(GestorLugar.get(cursor));
+        }
+        cursor.close();
+        return todos;
+    }
+
+    //alias
+    public List<Lugar> getLugar(String condicion, String[] parametros) {
+        return get(condicion, parametros);
     }
 
     public Lugar get(long id) {
-        //...
-        return null;
+        Lugar lugar = null;
+        List<Lugar> lista = get(Contrato.TableLugar._ID + " = ?", new String[]{id + ""});
+        if(lista.size() > 0) {
+            lugar = lista.get(0);
+        }
+        return lugar;
+    }
+
+    //alias
+    public Lugar getLugar(long id) {
+        return get(id);
     }
 
     public Cursor getCursor() {
@@ -72,7 +96,14 @@ public class GestorLugar {
     }
 
     public Cursor getCursor(String condicion, String[] parametros) {
-        return null;
+        return bd.query(
+                Contrato.TableLugar.TABLE,
+                null,
+                condicion,
+                parametros,
+                null,
+                null,
+                Contrato.TableLugar.NOMBRE + " asc");
     }
 
     public Cursor getCursor(long id) {
@@ -81,9 +112,11 @@ public class GestorLugar {
 
     //Update -> edit - save - update
     public int edit(Lugar lugar) {
-        // objeto -> contentvalues
-        //...
-        return 0;
+        return bd.update(
+                Contrato.TableLugar.TABLE,
+                GestorLugar.get(lugar),
+                Contrato.TableLugar._ID + " = ?",
+                new String[]{lugar.getId() + ""});
     }
 
     //Delete -> delete - erase - remove
@@ -92,20 +125,35 @@ public class GestorLugar {
     }
 
     public int remove(long id) {
-        //...
-        return 0;
+        String condicion = Contrato.TableLugar._ID + " = ?";
+        String[] argumentos = { id + "" };
+        return bd.delete(Contrato.TableLugar.TABLE, condicion, argumentos);
     }
 
     //others
 
     public static Lugar get(Cursor c) {
-        //...
-        return null;
+        Lugar lugar = new Lugar();
+        lugar.setId(c.getLong(c.getColumnIndex(Contrato.TableLugar._ID)));
+        lugar.setNombre(c.getString(c.getColumnIndex(Contrato.TableLugar.NOMBRE)));
+        lugar.setLatitud(c.getDouble(c.getColumnIndex(Contrato.TableLugar.LATITUD)));
+        lugar.setLongitud(c.getDouble(c.getColumnIndex(Contrato.TableLugar.LONGITUD)));
+        lugar.setLocalidad(c.getString(c.getColumnIndex(Contrato.TableLugar.LOCALIDAD)));
+        lugar.setPais(c.getString(c.getColumnIndex(Contrato.TableLugar.PAIS)));
+        lugar.setComentario(c.getString(c.getColumnIndex(Contrato.TableLugar.COMENTARIO)));
+        lugar.setPuntos(c.getInt(c.getColumnIndex(Contrato.TableLugar.PUNTOS)));
+        lugar.setFecha(c.getString(c.getColumnIndex(Contrato.TableLugar.FECHA)));
+        return lugar;
+    }
+
+    //alias
+    public static Lugar getLugar(Cursor c) {
+        return GestorLugar.get(c);
     }
 
     private static ContentValues get(Lugar lugar) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(Contrato.TableLugar._ID, lugar.getId());
+        //contentValues.put(Contrato.TableLugar._ID, lugar.getId());
         contentValues.put(Contrato.TableLugar.NOMBRE, lugar.getNombre());
         contentValues.put(Contrato.TableLugar.LATITUD, lugar.getLatitud());
         contentValues.put(Contrato.TableLugar.LONGITUD, lugar.getLongitud());
@@ -117,8 +165,8 @@ public class GestorLugar {
         return contentValues;
     }
 
+    //alias, millenials version
     private static ContentValues getContentValues(Lugar lugar) {
-        //versión para millenials
         return GestorLugar.get(lugar);
     }
 }
