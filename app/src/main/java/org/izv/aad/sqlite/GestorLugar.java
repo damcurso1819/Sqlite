@@ -10,7 +10,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.izv.aad.sqlite.MainActivity.LOG;
+import static org.izv.aad.sqlite.MainActivity.TAG;
 
 public class GestorLugar {
 
@@ -22,7 +22,7 @@ public class GestorLugar {
     }
 
     public GestorLugar(Context c, boolean write) {
-        Log.v(LOG, "constructor gestor");
+        Log.v(TAG, "constructor gestor");
         this.ayudante = new Ayudante(c);
         if(write) {
             bd = ayudante.getWritableDatabase();

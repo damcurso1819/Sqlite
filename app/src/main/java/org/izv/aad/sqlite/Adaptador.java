@@ -3,13 +3,19 @@ package org.izv.aad.sqlite;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import static org.izv.aad.sqlite.MainActivity.TAG;
+
 public class Adaptador extends RecyclerView.Adapter<Adaptador.ViewHolder> {
+
+    //using the recyclerview
+    //https://github.com/codepath/android_guides/wiki/Using-the-RecyclerViev
 
     public interface OnItemClickListener {
         void onClick(ViewHolder holder, Lugar lugar);
@@ -18,7 +24,7 @@ public class Adaptador extends RecyclerView.Adapter<Adaptador.ViewHolder> {
     private Cursor cursor;
     private OnItemClickListener oyente;
 
-    public Adaptador(OnItemClickListener oyente,Cursor cursor) {
+    public Adaptador(OnItemClickListener oyente, Cursor cursor) {
         this.cursor = cursor;
         this.oyente = oyente;
     }
@@ -29,6 +35,7 @@ public class Adaptador extends RecyclerView.Adapter<Adaptador.ViewHolder> {
         if (cursor != null){
             c = cursor.getCount();
         }
+        Log.v(TAG, "count: " + c);
         return c;
     }
 
@@ -68,12 +75,14 @@ public class Adaptador extends RecyclerView.Adapter<Adaptador.ViewHolder> {
 
         @Override
         public void onClick(View view) {
+            Log.v(TAG, "onClick");
             Lugar lugar = null;
             long id = 0;
             if (cursor != null) {
                 if (cursor.moveToPosition(getAdapterPosition())) {
                     lugar = GestorLugar.get(cursor);
                     id = lugar.getId();
+                    Log.v(TAG, id + " " + lugar.toString());
                 } else {
                     id = -1;
                 }
